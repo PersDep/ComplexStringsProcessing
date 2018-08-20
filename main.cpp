@@ -32,8 +32,8 @@ public:
             inserts_counter++;
             nested_string = false;
         } else {
-            sortable_elems.emplace_back(TwoStrings(str.substr(entry_point + 1, end_point - entry_point - 1),
-                                                   str.substr(entry_point + 1, end_point - entry_point - 1)));
+            string insert = str.substr(entry_point + 1, end_point - entry_point - 1);
+            sortable_elems.emplace_back(TwoStrings(insert, insert));
         }
     }
 
@@ -55,13 +55,13 @@ public:
     bool Reading() { return reading; }
 };
 
-class NestringController
+class NestingController
 {
     int nesting_level;
     const char start_bracket = '(', end_bracket = ')';
 
 public:
-    NestringController() : nesting_level(0) {}
+    NestingController() : nesting_level(0) {}
 
     void Clear() { nesting_level = 0; }
 
@@ -87,12 +87,12 @@ class ExpressionsMap
 {
     map<int, vector<TwoStrings>> elems;
     vector<size_t> entry_points;
-    NestringController nesting_level;
+    NestingController nesting_level;
     const char delimiter = '+';
 
     void saveEntryPoint(size_t entry_point)
     {
-        if (entry_points.size() < nesting_level.GetNestingLevel())
+        if (entry_points.size() < size_t(nesting_level.GetNestingLevel()))
             entry_points.emplace_back(entry_point);
         else
             entry_points[nesting_level.GetNestingLevel() - 1] = entry_point;
