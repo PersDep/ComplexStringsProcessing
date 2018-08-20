@@ -80,8 +80,6 @@ public:
         return 0;
     }
 
-    bool IsGoingToIncrease(char c) { return c == start_bracket; }
-
     int GetNestingLevel() { return nesting_level; }
 };
 
@@ -124,8 +122,6 @@ public:
                     if (strs.first[i] == delimiter && sorter.Reading()) {
                         sorter.FillSortableElems(it, inserts_counter, strs.first, i);
                         sorter.SaveEntryPoint(i);
-                        if (nesting_level.IsGoingToIncrease(strs.first[i + 1]))
-                            sorter.BlockReading();
                     }
                     int nesting_level_shift = nesting_level.Shift(strs.first[i]);
                     if (nesting_level_shift > 0 && sorter.Reading()) {
