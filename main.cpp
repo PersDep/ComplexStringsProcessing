@@ -32,8 +32,8 @@ public:
             inserts_counter++;
             nested_string = false;
         } else {
-            string insert = str.substr(entry_point + 1, end_point - entry_point - 1);
-            sortable_elems.emplace_back(TwoStrings(insert, insert));
+            sortable_elems.emplace_back(TwoStrings(str.substr(entry_point + 1, end_point - entry_point - 1),
+                                                   str.substr(entry_point + 1, end_point - entry_point - 1)));
         }
     }
 
@@ -55,13 +55,13 @@ public:
     bool Reading() { return reading; }
 };
 
-class NestingController
+class NestringController
 {
     int nesting_level;
     const char start_bracket = '(', end_bracket = ')';
 
 public:
-    NestingController() : nesting_level(0) {}
+    NestringController() : nesting_level(0) {}
 
     void Clear() { nesting_level = 0; }
 
@@ -80,8 +80,6 @@ public:
         return 0;
     }
 
-    bool IsGoingToIncrease(char c) { return c == start_bracket; }
-
     int GetNestingLevel() { return nesting_level; }
 };
 
@@ -89,12 +87,12 @@ class ExpressionsMap
 {
     map<int, vector<TwoStrings>> elems;
     vector<size_t> entry_points;
-    NestingController nesting_level;
+    NestringController nesting_level;
     const char delimiter = '+';
 
     void saveEntryPoint(size_t entry_point)
     {
-        if (entry_points.size() < size_t(nesting_level.GetNestingLevel()))
+        if (entry_points.size() < nesting_level.GetNestingLevel())
             entry_points.emplace_back(entry_point);
         else
             entry_points[nesting_level.GetNestingLevel() - 1] = entry_point;
@@ -124,8 +122,6 @@ public:
                     if (strs.first[i] == delimiter && sorter.Reading()) {
                         sorter.FillSortableElems(it, inserts_counter, strs.first, i);
                         sorter.SaveEntryPoint(i);
-                        if (nesting_level.IsGoingToIncrease(strs.first[i + 1]))
-                            sorter.BlockReading();
                     }
                     int nesting_level_shift = nesting_level.Shift(strs.first[i]);
                     if (nesting_level_shift > 0 && sorter.Reading()) {
